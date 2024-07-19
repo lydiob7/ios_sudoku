@@ -11,6 +11,13 @@
 		7950E4402C46937F00B8B69F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7950E43F2C46937F00B8B69F /* ContentView.swift */; };
 		7950E4422C46938000B8B69F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7950E4412C46938000B8B69F /* Assets.xcassets */; };
 		7950E4452C46938000B8B69F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7950E4442C46938000B8B69F /* Preview Assets.xcassets */; };
+		79595EF42C482A50000B572E /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79595EF32C482A50000B572E /* Tile.swift */; };
+		79595EF62C482A9C000B572E /* Sudoku.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79595EF52C482A9C000B572E /* Sudoku.swift */; };
+		79595EF82C482AD6000B572E /* TileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79595EF72C482AD6000B572E /* TileView.swift */; };
+		79595EFA2C482B12000B572E /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79595EF92C482B12000B572E /* GridView.swift */; };
+		79595EFC2C482B40000B572E /* SudokuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79595EFB2C482B40000B572E /* SudokuView.swift */; };
+		79EF73962C495CFF00086551 /* TimerClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79EF73952C495CFF00086551 /* TimerClock.swift */; };
+		79EF739B2C49779B00086551 /* SudokuGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79EF739A2C49779B00086551 /* SudokuGenerator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +26,13 @@
 		7950E43F2C46937F00B8B69F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7950E4412C46938000B8B69F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7950E4442C46938000B8B69F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		79595EF32C482A50000B572E /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
+		79595EF52C482A9C000B572E /* Sudoku.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sudoku.swift; sourceTree = "<group>"; };
+		79595EF72C482AD6000B572E /* TileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileView.swift; sourceTree = "<group>"; };
+		79595EF92C482B12000B572E /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
+		79595EFB2C482B40000B572E /* SudokuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuView.swift; sourceTree = "<group>"; };
+		79EF73952C495CFF00086551 /* TimerClock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerClock.swift; sourceTree = "<group>"; };
+		79EF739A2C49779B00086551 /* SudokuGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +65,8 @@
 		7950E43C2C46937F00B8B69F /* Sudoku */ = {
 			isa = PBXGroup;
 			children = (
+				79595EFE2C482BB1000B572E /* models */,
+				79595EFD2C482B8E000B572E /* views */,
 				7950E43D2C46937F00B8B69F /* SudokuApp.swift */,
 				7950E43F2C46937F00B8B69F /* ContentView.swift */,
 				7950E4412C46938000B8B69F /* Assets.xcassets */,
@@ -65,6 +81,27 @@
 				7950E4442C46938000B8B69F /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		79595EFD2C482B8E000B572E /* views */ = {
+			isa = PBXGroup;
+			children = (
+				79595EFB2C482B40000B572E /* SudokuView.swift */,
+				79595EF92C482B12000B572E /* GridView.swift */,
+				79595EF72C482AD6000B572E /* TileView.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		79595EFE2C482BB1000B572E /* models */ = {
+			isa = PBXGroup;
+			children = (
+				79595EF32C482A50000B572E /* Tile.swift */,
+				79EF73952C495CFF00086551 /* TimerClock.swift */,
+				79595EF52C482A9C000B572E /* Sudoku.swift */,
+				79EF739A2C49779B00086551 /* SudokuGenerator.swift */,
+			);
+			path = models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,7 +174,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79EF73962C495CFF00086551 /* TimerClock.swift in Sources */,
+				79595EF42C482A50000B572E /* Tile.swift in Sources */,
+				79595EFC2C482B40000B572E /* SudokuView.swift in Sources */,
 				7950E4402C46937F00B8B69F /* ContentView.swift in Sources */,
+				79595EF62C482A9C000B572E /* Sudoku.swift in Sources */,
+				79EF739B2C49779B00086551 /* SudokuGenerator.swift in Sources */,
+				79595EF82C482AD6000B572E /* TileView.swift in Sources */,
+				79595EFA2C482B12000B572E /* GridView.swift in Sources */,
 				7950E43E2C46937F00B8B69F /* SudokuApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
