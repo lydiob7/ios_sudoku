@@ -114,36 +114,41 @@ func getNumberOfClues(difficulty: Difficulty?) -> Int {
     }
 }
 
-func SudokuGenerator(difficulty: Difficulty?) -> Sudoku {
-    var initialRow: [Int] = []
-    var solution: [[Int]] = []
-    var numbersForInitialRow = [1,2,3,4,5,6,7,8,9].shuffled()
+func SudokuGenerator(difficulty: Difficulty?, maxOfMistakes: Int, maxOfHints: Int) -> Sudoku {
+    let seed = [
+        [9,6,2,4,1,5,3,7,8],
+        [3,7,4,9,2,8,5,6,1],
+        [1,8,5,7,6,3,4,2,9],
+        [5,3,1,6,7,2,9,8,4],
+        [6,4,9,8,3,1,2,5,7],
+        [8,2,7,5,4,9,6,1,3],
+        [7,5,3,2,8,4,1,9,6],
+        [4,9,6,1,5,7,8,3,2],
+        [2,1,8,3,9,6,7,4,5]
+    ]
+    var solution: [[Int]] = seed
+    let initialRow = seed[0].shuffled()
+    var numbersMap = [Int:Int]()
     
-    for _ in (1...9) {
-        let newRandomNumber = numbersForInitialRow.removeFirst()
-        initialRow.append(newRandomNumber)
+    for i in (0..<9) {
+        numbersMap[seed[0][i]] = initialRow[i]
     }
     
-    var tempRowsArray: [[Int]] = []
-    for row in (1..<9) {
-        let offsetDigits = initialRow.prefix(row)
-        var newRow = initialRow[row...]
-        newRow.append(contentsOf: offsetDigits)
-        tempRowsArray.append(Array(newRow))
+    for rowIndex in (0..<9) {
+        for numIndex in (0..<9) {
+            let originalNumber = seed[rowIndex][numIndex]
+            solution[rowIndex][numIndex] = numbersMap[originalNumber] ?? 0
+        }
     }
-    solution.append(initialRow)
-    solution.append(tempRowsArray[2])
-    solution.append(tempRowsArray[5])
-    solution.append(tempRowsArray[0])
-    solution.append(tempRowsArray[3])
-    solution.append(tempRowsArray[6])
-    solution.append(tempRowsArray[1])
-    solution.append(tempRowsArray[4])
-    solution.append(tempRowsArray[7])
     
     let initialState = leaveOnlyHints(grid: solution, numberOfHints: getNumberOfClues(difficulty: difficulty))
     
     
-    return Sudoku(solution: solution, initialState: initialState)
+    return Sudoku(
+                solution: solution,
+                initialState: initialState,
+                maxOfMistakes: maxOfMistakes,
+                maxOfHints: maxOfHints
+    )
     
 }

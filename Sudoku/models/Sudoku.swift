@@ -13,6 +13,7 @@ struct Sudoku {
     let maxOfMistakes: Int
     
     var errorsCount: Int = 0
+    var avaliableHints: Int
     var isSolved: Bool {
         solution == tiles.map { row in
             return row.map { tile in
@@ -36,10 +37,11 @@ struct Sudoku {
     var tiles: [[Tile]]
     var selectedTile: Tile?
     
-    init(solution: [[Int]], initialState: [[Int]], maxOfMistakes: Int = 3) {
+    init(solution: [[Int]], initialState: [[Int]], maxOfMistakes: Int = 3, maxOfHints: Int = 1) {
         self.initialState = initialState
         self.solution = solution
         self.maxOfMistakes = maxOfMistakes
+        self.avaliableHints = maxOfHints
         self.tiles = (0..<9).map { row in
             return (0..<9).map { col in
                 return Tile(
@@ -103,6 +105,22 @@ struct Sudoku {
                 }
                 else { tiles[index][colIndex].unsetNumberHasErrors() }
             }
+        }
+    }
+    
+    mutating func eraseTile() {
+        if let selectedTile {
+            let previousGuess = tiles[selectedTile.row][selectedTile.column].currentNumber
+            tiles[selectedTile.row][selectedTile.column].guess(number: nil)
+            if let previousGuess { toggleAllTilesWithSameNumberError(previousGuess, false) }
+        }
+    }
+    
+    mutating func showHint() {
+        if avaliableHints == 0 { return }
+        if let selectedTile {
+            tiles[selectedTile.row][selectedTile.column].showCorrectNumber()
+            avaliableHints -= 1
         }
     }
     

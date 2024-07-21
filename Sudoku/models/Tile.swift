@@ -29,8 +29,8 @@ struct Tile {
     }
     
     public let correctNumber: Int
-    public let isStatic: Bool
     
+    public var isStatic: Bool
     public var currentNumber: Int?
     public var isSameNumberAsSelected: Bool = false
     public var isSelected: Bool = false
@@ -69,7 +69,7 @@ struct Tile {
         self.isTileInGroupSelected = false
     }
     
-    mutating func guess(number: Int) {
+    mutating func guess(number: Int?) {
         self.currentNumber = number
     }
     
@@ -87,5 +87,9 @@ struct Tile {
     
     mutating func unsetNumberHasErrors() {
         self.numberHasErrors = false
+    }
+    
+    mutating func showCorrectNumber() {
+        self.isStatic = true
     }
 }

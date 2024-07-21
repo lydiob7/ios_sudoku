@@ -9,7 +9,10 @@ import SwiftUI
 
 struct SudokuView: View {
     static var difficulty: Difficulty = .easy
-    @State public var sudoku = SudokuGenerator(difficulty: difficulty)
+    static var maxOfMistakes: Int = 3
+    static var maxOfHints: Int = 1
+    
+    @State public var sudoku = SudokuGenerator(difficulty: difficulty, maxOfMistakes: maxOfMistakes, maxOfHints: maxOfHints)
     let tileWidth: CGFloat = 40
     let tileHeight: CGFloat = 49
     let dividerWidth: CGFloat = 3
@@ -21,6 +24,11 @@ struct SudokuView: View {
                     VStack {
                         Text("Mistakes")
                         Text("\(sudoku.errorsCount) / 3")
+                    }
+                    Spacer()
+                    VStack {
+                        Text("Level")
+                        Text("\(Self.difficulty.description)")
                     }
                     Spacer()
                     VStack {
@@ -66,7 +74,7 @@ struct SudokuView: View {
                                 .fontWeight(.bold)
                                 .foregroundStyle(sudoku.isLost ? .red : .green)
                             Button {
-                                
+                                resetGame()
                             } label: {
                                 Text("Start a new one")
                             }
@@ -75,6 +83,43 @@ struct SudokuView: View {
                     }
                 }
                 .border(.primary, width: dividerWidth)
+                
+                HStack {
+                    VStack {
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "arrow.uturn.backward")
+                                .font(.system(size: 30))
+                        }
+                        Text("Undo")
+                            .foregroundColor(.accentColor)
+                    }
+                    Spacer()
+                    VStack {
+                        Button {
+                            sudoku.eraseTile()
+                        } label: {
+                            Image(systemName: "eraser")
+                                .font(.system(size: 30))
+                        }
+                        Text("Erase")
+                            .foregroundColor(.accentColor)
+                    }
+                    Spacer()
+                    VStack {
+                        Button {
+                            sudoku.showHint()
+                        } label: {
+                            Image(systemName: "lightbulb")
+                                .font(.system(size: 30))
+                        }
+                        .disabled(sudoku.avaliableHints == 0)
+                        Text("Hint")
+                            .foregroundColor(sudoku.avaliableHints == 0 ? .gray : .accentColor)
+                    }
+                }
+                .padding(.horizontal)
                 
                 HStack {
                     ForEach(0..<9) { num in
@@ -88,8 +133,13 @@ struct SudokuView: View {
                         .disabled(sudoku.isLost || sudoku.isSolved)
                     }
                 }
+                .padding(.horizontal)
             }
            
+    }
+    
+    func resetGame() {
+        sudoku = SudokuGenerator(difficulty: Self.difficulty, maxOfMistakes: Self.maxOfMistakes, maxOfHints: Self.maxOfHints)
     }
 }
 
