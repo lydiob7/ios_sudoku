@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SudokuView: View {
-    static var difficulty: Difficulty = .easy
+    static var difficulty: Difficulty = .hard
     static var maxOfMistakes: Int = 3
     static var maxOfHints: Int = 1
     
@@ -23,7 +23,7 @@ struct SudokuView: View {
                 HStack {
                     VStack {
                         Text("Mistakes")
-                        Text("\(sudoku.errorsCount) / 3")
+                        Text("\(sudoku.errorsCount) / \(Self.maxOfMistakes)")
                     }
                     Spacer()
                     VStack {
@@ -108,13 +108,26 @@ struct SudokuView: View {
                     }
                     Spacer()
                     VStack {
-                        Button {
-                            sudoku.showHint()
-                        } label: {
-                            Image(systemName: "lightbulb")
-                                .font(.system(size: 30))
+                        ZStack {
+                            Button {
+                                sudoku.showHint()
+                            } label: {
+                                Image(systemName: "lightbulb")
+                                    .font(.system(size: 30))
+                            }
+                            .disabled(sudoku.avaliableHints == 0)
+                            
+                            if (sudoku.avaliableHints > 0) {
+                                Text("\(sudoku.avaliableHints)")
+                                    .font(.caption)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: 20, maxHeight: 20)
+                                    .background(.red)
+                                    .clipShape(.circle)
+                                    .offset(x: 10, y: -14)
+                                    
+                            }
                         }
-                        .disabled(sudoku.avaliableHints == 0)
                         Text("Hint")
                             .foregroundColor(sudoku.avaliableHints == 0 ? .gray : .accentColor)
                     }
