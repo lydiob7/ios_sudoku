@@ -7,15 +7,20 @@
 
 import SwiftUI
 
+let SAVED_SUDOKU_KEY = "CurrentSudoku"
+
 struct SudokuView: View {
-    @AppStorage("CURRENT_SUDOKU_ID") var currentSudokuId: String = "no"
-    @Environment(\.modelContext) private var modelContext
-    
     static var difficulty: Difficulty = .hard
     static var maxOfMistakes: Int = 3
     static var maxOfHints: Int = 1
     
-    @State private var sudoku = SudokuGenerator(difficulty: difficulty, maxOfMistakes: maxOfMistakes, maxOfHints: maxOfHints)
+    @State var sudoku: Sudoku {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(toSavedSudoku(sudoku: sudoku, difficulty: Self.difficulty, maxOfMistakes: Self.maxOfMistakes, maxOfHints: Self.maxOfHints)) {
+                UserDefaults.standard.set(encoded, forKey: SAVED_SUDOKU_KEY)
+            }
+        }
+    }
     let tileWidth: CGFloat = 40
     let tileHeight: CGFloat = 49
     let dividerWidth: CGFloat = 3
@@ -23,45 +28,34 @@ struct SudokuView: View {
         sudoku.isPaused || sudoku.isLost || sudoku.isSolved
     }
     
-    @ViewBuilder var body: some View {
-        
-            VStack(spacing: 30) {
-                HStack {
-                    VStack {
-                        Text("Mistakes")
-                        Text("\(sudoku.errorsCount) / \(Self.maxOfMistakes)")
-                    }
-                    Spacer()
-                    VStack {
-                        Text("Level")
-                        Text("\(Self.difficulty.description)")
-                    }
-                    Spacer()
-                    VStack {
-                        Text("Score")
-                        Text("\(sudoku.score)")
-                    }
-                    Spacer()
-                    VStack {
-                        Text("Time")
-                        Text(sudoku.timer.formattedTime())
-                    }
-                    Spacer()
-                    Button {
-                        sudoku.togglePauseResume()
-                    } label: {
-                        Image(systemName: sudoku.isPaused ? "play.fill" : "pause.fill")
-                            .font(.system(size: 20))
-                    }
+    init() {
+        if let savedSudoku = UserDefaults.standard.data(forKey: SAVED_SUDOKU_KEY) {
+            if let decodedSudoku = try? JSONDecoder().decode(SavedSudoku.self, from: savedSudoku) {
+                self.sudoku = Sudoku(decodedSudoku)
+                if let difficulty = decodedSudoku.difficulty {
+                    Self.difficulty = difficulty
                 }
-                .padding(.horizontal)
+                Self.maxOfHints = decodedSudoku.maxOfHints
+                Self.maxOfMistakes = decodedSudoku.maxOfMistakes
+                return
+            }
+        }
+        self.sudoku = SudokuGenerator(difficulty: Self.difficulty, maxOfMistakes: Self.maxOfMistakes, maxOfHints: Self.maxOfHints)
+    }
+    
+    @ViewBuilder var body: some View {
+            VStack(spacing: 30) {
+                GameToolbarView(sudoku: $sudoku, maxOfMistakes: Self.maxOfMistakes, difficulty: Self.difficulty)
                 ZStack {
                     GridStack(rows: 9, columns: 9, content: { (row, col) in
                         HStack(spacing: 0) {
                             VStack(spacing: 0) {
                                 TileView(
                                     tile: sudoku.tiles[row][col],
-                                    pressTile: {sudoku.selectTile(row, col)}
+                                    pressTile: {
+                                        if isGameBlocked { return }
+                                        sudoku.selectTile(row, col)
+                                    }
                                 )
                                 .frame(width: tileWidth, height: tileHeight)
                                 .border(.placeholder, width: 0.8)
@@ -110,117 +104,33 @@ struct SudokuView: View {
                 }
                 .border(.primary, width: dividerWidth)
                 
-                HStack {
-                    VStack {
-                        Button {
-                            sudoku.undo()
-                        } label: {
-                            Image(systemName: "arrow.uturn.backward")
-                                .font(.system(size: 30))
-                        }
-                        .disabled(isGameBlocked)
-                        Text("Undo")
-                            .foregroundColor(isGameBlocked ? .gray : .accentColor)
-                    }
-                    Spacer()
-                    VStack {
-                        Button {
-                            sudoku.eraseTile()
-                        } label: {
-                            Image(systemName: "eraser")
-                                .font(.system(size: 30))
-                        }
-                        .disabled(isGameBlocked)
-                        Text("Erase")
-                            .foregroundColor(isGameBlocked ? .gray : .accentColor)
-                    }
-                    Spacer()
-                    VStack {
-                        ZStack {
-                            Button {
-                                sudoku.toggleNotesMode()
-                            } label: {
-                                Image(systemName: "pencil.line")
-                                    .font(.system(size: 30))
-                            }
-                            .disabled(isGameBlocked)
-                            Text(sudoku.isNotesMode ? "ON": "OFF")
-                                .font(.caption)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: 34, maxHeight: 20)
-                                .background(sudoku.isNotesMode && !isGameBlocked ? Color.primary : Color.gray)
-                                .clipShape(.capsule)
-                                .offset(x: 20, y: -14)
-                        }
-                        Text("Notes")
-                            .foregroundColor(isGameBlocked ? .gray : .accentColor)
-                    }
-                    Spacer()
-                    VStack {
-                        ZStack {
-                            Button {
-                                sudoku.showHint()
-                            } label: {
-                                Image(systemName: "lightbulb")
-                                    .font(.system(size: 30))
-                            }
-                            .disabled(sudoku.avaliableHints == 0 || isGameBlocked)
-                            
-                            if (sudoku.avaliableHints > 0) {
-                                Text("\(sudoku.avaliableHints)")
-                                    .font(.caption)
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: 20, maxHeight: 20)
-                                    .background(isGameBlocked ? Color.gray : Color.red)
-                                    .clipShape(.circle)
-                                    .offset(x: 10, y: -14)
-                                    
-                            }
-                        }
-                        Text("Hint")
-                            .foregroundColor(sudoku.avaliableHints == 0 || isGameBlocked ? .gray : .accentColor)
-                    }
-                }
-                .padding(.horizontal)
-                
-                HStack {
-                    ForEach(0..<9) { num in
-                        Button(String(num + 1)) {
-                            sudoku.guess(num + 1)
-                            if !currentSudokuId.isEmpty { return }
-                            else {
-                                let newHistoricSudoku = HistoricSudoku(
-                                    currentState: sudoku.currentState,
-                                    difficulty: Self.difficulty,
-                                    errorsCount: sudoku.errorsCount,
-                                    initialState: sudoku.initialState,
-                                    maxOfMistakes: Self.maxOfMistakes,
-                                    maxOfHints: Self.maxOfHints,
-                                    score: sudoku.score,
-                                    solution: sudoku.solution,
-                                    time: sudoku.timer.timeElapsed
-                                )
-                                modelContext.insert(newHistoricSudoku)
-                            }
-                        }
-                        .foregroundColor(.accentColor)
-                        .font(.largeTitle)
-                        .fontWeight(.semibold)
-                        .frame(width: 33, height: 50)
-                        .disabled(isGameBlocked)
-                    }
-                }
-                .padding(.horizontal)
+                GameControlsView(sudoku: $sudoku, isGameBlocked: isGameBlocked)
             }
            
     }
     
     func resetGame() {
         sudoku = SudokuGenerator(difficulty: Self.difficulty, maxOfMistakes: Self.maxOfMistakes, maxOfHints: Self.maxOfHints)
+        sudoku.startGame()
     }
+}
+
+func toSavedSudoku(sudoku: Sudoku, difficulty: Difficulty, maxOfMistakes: Int, maxOfHints: Int) -> SavedSudoku {
+    return SavedSudoku(
+        availableHints: sudoku.availableHints,
+        currentState: sudoku.currentState,
+        difficulty: difficulty,
+        errorsCount: sudoku.errorsCount,
+        history: sudoku.history,
+        initialState: sudoku.initialState,
+        maxOfMistakes: maxOfMistakes, 
+        maxOfHints: maxOfHints, 
+        score: sudoku.score,
+        solution: sudoku.solution,
+        time: sudoku.timer.timeElapsed
+    )
 }
 
 #Preview {
     SudokuView()
-        .modelContainer(for: HistoricSudoku.self, inMemory: true)
 }

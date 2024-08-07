@@ -42,7 +42,11 @@ struct TileView: View {
                                 Text("\((row * 3) + col + 1)")
                                     .font(.system(size: 12))
                                     .foregroundColor(.gray)
-                                    .frame(maxWidth: 13)
+                                    .frame(maxWidth: 12)
+                            }
+                            else {
+                                Color.clear
+                                    .frame(maxWidth: 12, maxHeight: 12)
                             }
                         }
                     })

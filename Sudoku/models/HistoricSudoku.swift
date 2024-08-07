@@ -6,42 +6,36 @@
 //
 
 import Foundation
-import SwiftData
 
-@Model
-final class HistoricSudoku {
-    var currentState: [[Int]]
-    var difficulty: Difficulty?
+final class HistoricSudoku: Identifiable, Codable {
+    var difficulty: Difficulty
     var errorsCount: Int
-    var initialState: [[Int]]
+    var id = UUID()
+    var isFinished: Bool
+    var isWon: Bool
     var maxOfHints: Int
     var maxOfMistakes: Int
     var score: Int
-    var solution: [[Int]]
     var time: TimeInterval
-    @Attribute(.unique)
-    var timestamp: Date
+    var timestamp = Date()
     
     init(
-        currentState: [[Int]],
         difficulty: Difficulty,
         errorsCount: Int,
-        initialState: [[Int]],
+        isFinished: Bool,
+        isWon: Bool,
         maxOfMistakes: Int,
         maxOfHints: Int,
         score: Int,
-        solution: [[Int]],
         time: TimeInterval
     ) {
-        self.currentState = currentState
         self.difficulty = difficulty
         self.errorsCount = errorsCount
-        self.initialState = initialState
+        self.isFinished = isFinished
+        self.isWon = isWon
         self.maxOfHints = maxOfHints
         self.maxOfMistakes = maxOfMistakes
         self.score = score
-        self.solution = solution
         self.time = time
-        self.timestamp = Date()
     }
 }

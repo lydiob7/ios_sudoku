@@ -7,6 +7,46 @@
 
 import Foundation
 
+final class SavedSudoku: Codable {
+    var availableHints: Int
+    var currentState: [[Int]]
+    var difficulty: Difficulty?
+    var errorsCount: Int
+    var history: [[[Int]]]
+    var initialState: [[Int]]
+    var maxOfHints: Int
+    var maxOfMistakes: Int
+    var score: Int
+    var solution: [[Int]]
+    var time: TimeInterval
+    
+    init(
+        availableHints: Int,
+        currentState: [[Int]],
+        difficulty: Difficulty,
+        errorsCount: Int,
+        history: [[[Int]]],
+        initialState: [[Int]],
+        maxOfMistakes: Int,
+        maxOfHints: Int,
+        score: Int,
+        solution: [[Int]],
+        time: TimeInterval
+    ) {
+        self.availableHints = availableHints
+        self.currentState = currentState
+        self.difficulty = difficulty
+        self.errorsCount = errorsCount
+        self.history = history
+        self.initialState = initialState
+        self.maxOfHints = maxOfHints
+        self.maxOfMistakes = maxOfMistakes
+        self.score = score
+        self.solution = solution
+        self.time = time
+    }
+}
+
 struct Sudoku {
     let solution: [[Int]]
     let initialState: [[Int]]
@@ -14,7 +54,7 @@ struct Sudoku {
     
     var history: [[[Int]]]
     var errorsCount: Int = 0
-    var avaliableHints: Int
+    var availableHints: Int
     var isPaused: Bool = false
     var isNotesMode: Bool = false
     var isSolved: Bool {
@@ -50,7 +90,7 @@ struct Sudoku {
         self.initialState = initialState
         self.solution = solution
         self.maxOfMistakes = maxOfMistakes
-        self.avaliableHints = maxOfHints
+        self.availableHints = maxOfHints
         self.history = [initialState]
         self.tiles = (0..<9).map { row in
             return (0..<9).map { col in
@@ -63,6 +103,28 @@ struct Sudoku {
                 )
             }
         }
+    }
+    
+    init(_ savedSudoku: SavedSudoku) {
+        self.availableHints = savedSudoku.availableHints
+        self.errorsCount = savedSudoku.errorsCount
+        self.history = savedSudoku.history
+        self.initialState = savedSudoku.initialState
+        self.maxOfMistakes = savedSudoku.maxOfMistakes
+        self.solution = savedSudoku.solution
+        self.tiles = (0..<9).map { row in
+            return (0..<9).map { col in
+                return Tile(
+                    column: col,
+                    row: row,
+                    number: savedSudoku.solution[row][col],
+                    isStatic: savedSudoku.initialState[row][col] != 0,
+                    numbersWithErrors: [:],
+                    currentNumber: savedSudoku.currentState[row][col] == 0 ? nil : savedSudoku.currentState[row][col]
+                )
+            }
+        }
+        self.timer.timeElapsed = savedSudoku.time
     }
     
     mutating func addHistory(_ row: Int, _ col: Int, _ value: Int) {
@@ -101,7 +163,9 @@ struct Sudoku {
             return
         }
         if let selectedTile {
+            if tiles[selectedTile.row][selectedTile.column].isStatic { return }
             let previousGuess = tiles[selectedTile.row][selectedTile.column].currentNumber
+            if previousGuess == guessNumber { return }
             tiles[selectedTile.row][selectedTile.column].guess(number: guessNumber)
             tiles[selectedTile.row][selectedTile.column].resetNotes()
             addHistory(selectedTile.row, selectedTile.column, guessNumber)
@@ -145,11 +209,11 @@ struct Sudoku {
     }
     
     mutating func showHint() {
-        if avaliableHints == 0 { return }
+        if availableHints == 0 { return }
         if let selectedTile {
             tiles[selectedTile.row][selectedTile.column].showCorrectNumber()
             addHistory(selectedTile.row, selectedTile.column, tiles[selectedTile.row][selectedTile.column].correctNumber)
-            avaliableHints -= 1
+            availableHints -= 1
         }
     }
     
@@ -175,6 +239,12 @@ struct Sudoku {
     
     mutating func togglePauseResume() {
         isPaused = !isPaused
+        if isPaused {
+            timer.stop()
+        }
+        else {
+            timer.resume()
+        }
     }
     
     mutating func toggleTileNote(_ number: Int) {

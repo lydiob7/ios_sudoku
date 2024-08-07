@@ -44,8 +44,9 @@ struct Tile {
     }
     var numberHasErrors: Bool = false
     
-    init(column: Int, row: Int, number: Int, isStatic: Bool, numbersWithErrors: [Int: Bool]) {
+    init(column: Int, row: Int, number: Int, isStatic: Bool, numbersWithErrors: [Int: Bool], currentNumber: Int? = nil) {
         self.column = column
+        self.currentNumber = currentNumber
         self.row = row
         self.correctNumber = number
         self.isStatic = isStatic

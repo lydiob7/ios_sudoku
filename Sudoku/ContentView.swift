@@ -12,11 +12,16 @@ struct ContentView: View {
         NavigationStack {
             SudokuView()
                 .navigationTitle("Sudoku")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    Button("Settings", systemImage: "gearshape") {
+                        
+                    }
+                }
         }
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: HistoricSudoku.self, inMemory: true)
 }

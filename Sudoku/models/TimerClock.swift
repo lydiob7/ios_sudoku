@@ -30,6 +30,16 @@ class TimerClock {
     
     func stop() {
         isRunning = false
+        timer?.invalidate()
+    }
+    
+    func resume() {
+        isRunning = true
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(addTime), userInfo: nil, repeats: true)
+    }
+    
+    func reset() {
+        timeElapsed = 0
     }
 }
 
