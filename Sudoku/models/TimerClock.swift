@@ -20,26 +20,28 @@ class TimerClock {
     }
     
     func start() {
-        isRunning = true
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(addTime), userInfo: nil, repeats: true)
+        self.isRunning = true
+        self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(addTime), userInfo: nil, repeats: true)
     }
     
     @objc func addTime() {
-        timeElapsed += 1
+        self.timeElapsed += 1
     }
     
     func stop() {
-        isRunning = false
-        timer?.invalidate()
+        self.isRunning = false
+        self.timer?.invalidate()
     }
     
     func resume() {
-        isRunning = true
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(addTime), userInfo: nil, repeats: true)
+        self.isRunning = true
+        self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(addTime), userInfo: nil, repeats: true)
     }
     
     func reset() {
-        timeElapsed = 0
+        self.stop()
+        self.timeElapsed = 0
+        self.resume()
     }
 }
 

@@ -14,6 +14,7 @@ final class SavedSudoku: Codable {
     var errorsCount: Int
     var history: [[[Int]]]
     var initialState: [[Int]]
+    var isPaused: Bool
     var maxOfHints: Int
     var maxOfMistakes: Int
     var score: Int
@@ -27,6 +28,7 @@ final class SavedSudoku: Codable {
         errorsCount: Int,
         history: [[[Int]]],
         initialState: [[Int]],
+        isPaused: Bool,
         maxOfMistakes: Int,
         maxOfHints: Int,
         score: Int,
@@ -39,6 +41,7 @@ final class SavedSudoku: Codable {
         self.errorsCount = errorsCount
         self.history = history
         self.initialState = initialState
+        self.isPaused = isPaused
         self.maxOfHints = maxOfHints
         self.maxOfMistakes = maxOfMistakes
         self.score = score
@@ -51,6 +54,7 @@ struct Sudoku {
     let solution: [[Int]]
     let initialState: [[Int]]
     let maxOfMistakes: Int
+    let maxOfHints: Int
     
     var history: [[[Int]]]
     var errorsCount: Int = 0
@@ -89,6 +93,7 @@ struct Sudoku {
     init(solution: [[Int]], initialState: [[Int]], maxOfMistakes: Int = 3, maxOfHints: Int = 1) {
         self.initialState = initialState
         self.solution = solution
+        self.maxOfHints = maxOfHints
         self.maxOfMistakes = maxOfMistakes
         self.availableHints = maxOfHints
         self.history = [initialState]
@@ -110,7 +115,10 @@ struct Sudoku {
         self.errorsCount = savedSudoku.errorsCount
         self.history = savedSudoku.history
         self.initialState = savedSudoku.initialState
+        self.isPaused = savedSudoku.isPaused
+        self.maxOfHints = savedSudoku.maxOfHints
         self.maxOfMistakes = savedSudoku.maxOfMistakes
+        self.score = savedSudoku.score
         self.solution = savedSudoku.solution
         self.tiles = (0..<9).map { row in
             return (0..<9).map { col in
@@ -152,6 +160,7 @@ struct Sudoku {
         if let selectedTile {
             let previousGuess = tiles[selectedTile.row][selectedTile.column].currentNumber
             tiles[selectedTile.row][selectedTile.column].guess(number: nil)
+            addHistory(selectedTile.row, selectedTile.column, 0)
             if let previousGuess { toggleAllTilesWithSameNumberError(previousGuess, false) }
         }
     }
@@ -179,6 +188,26 @@ struct Sudoku {
                 timer.stop()
             }
         }
+    }
+    
+    mutating func reset() {
+        self.availableHints = self.maxOfHints
+        self.errorsCount = 0
+        self.history = [initialState]
+        self.isPaused = false
+        self.score = 0
+        self.tiles = (0..<9).map { row in
+            return (0..<9).map { col in
+                return Tile(
+                    column: col,
+                    row: row,
+                    number: solution[row][col],
+                    isStatic: initialState[row][col] != 0,
+                    numbersWithErrors: [:]
+                )
+            }
+        }
+        self.timer.reset()
     }
     
     mutating func selectAllOfTheSameNumber(_ row: Int, _ col: Int) {

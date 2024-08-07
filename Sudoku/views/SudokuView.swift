@@ -22,7 +22,7 @@ struct SudokuView: View {
         }
     }
     let tileWidth: CGFloat = 40
-    let tileHeight: CGFloat = 49
+    let tileHeight: CGFloat = 44
     let dividerWidth: CGFloat = 3
     var isGameBlocked: Bool {
         sudoku.isPaused || sudoku.isLost || sudoku.isSolved
@@ -73,30 +73,40 @@ struct SudokuView: View {
                     .onAppear {
                         sudoku.startGame()
                     }
-                    .blur(radius: isGameBlocked ? 5 : 0)
+                    .blur(radius: isGameBlocked ? 8 : 0)
                     if (sudoku.isLost || sudoku.isSolved) {
-                        VStack {
+                        VStack(spacing: 20) {
                             Text(sudoku.isLost ? "You lost!" : "You won!")
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
                                 .foregroundStyle(sudoku.isLost ? .red : .green)
-                            Button {
-                                resetGame()
-                            } label: {
-                                Text("Start a new one")
+                            Button("Reset game") {
+                                sudoku.reset()
+                            }
+                            .buttonStyle(.bordered)
+                            .border(Color.black)
+                            .cornerRadius(3.0)
+                            .foregroundColor(.black)
+                            Button("Start a new one") {
+                                startNewGame()
                             }
                             .buttonStyle(.borderedProminent)
                         }
                     }
                     if (sudoku.isPaused) {
-                        VStack {
+                        VStack(spacing: 20) {
                             Text("Game paused")
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
-                            Button {
+                            Button("Start over") {
+                                sudoku.reset()
+                            }
+                            .buttonStyle(.bordered)
+                            .border(Color.black)
+                            .cornerRadius(3.0)
+                            .foregroundColor(.black)
+                            Button("Resume game") {
                                 sudoku.togglePauseResume()
-                            } label: {
-                                Text("Resume game")
                             }
                             .buttonStyle(.borderedProminent)
                         }
@@ -109,7 +119,7 @@ struct SudokuView: View {
            
     }
     
-    func resetGame() {
+    func startNewGame() {
         sudoku = SudokuGenerator(difficulty: Self.difficulty, maxOfMistakes: Self.maxOfMistakes, maxOfHints: Self.maxOfHints)
         sudoku.startGame()
     }
@@ -123,7 +133,8 @@ func toSavedSudoku(sudoku: Sudoku, difficulty: Difficulty, maxOfMistakes: Int, m
         errorsCount: sudoku.errorsCount,
         history: sudoku.history,
         initialState: sudoku.initialState,
-        maxOfMistakes: maxOfMistakes, 
+        isPaused: sudoku.isPaused,
+        maxOfMistakes: maxOfMistakes,
         maxOfHints: maxOfHints, 
         score: sudoku.score,
         solution: sudoku.solution,
