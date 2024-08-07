@@ -35,6 +35,18 @@ struct TileView: View {
                         .font(.title)
                         .foregroundColor(tile.wrongGuess ? .red : .accentColor)
                 }
+                else if tile.notes.count > 0 {
+                    GridStack(rows: 3, columns: 3, content: { (row, col) in
+                        HStack {
+                            if tile.notes.contains((row * 3) + col + 1) {
+                                Text("\((row * 3) + col + 1)")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: 13)
+                            }
+                        }
+                    })
+                }
             }
         }
     }

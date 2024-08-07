@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct SudokuApp: App {
@@ -13,5 +14,6 @@ struct SudokuApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: HistoricSudoku.self)
     }
 }

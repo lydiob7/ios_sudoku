@@ -8,14 +8,20 @@
 import SwiftUI
 
 struct SudokuView: View {
+    @AppStorage("CURRENT_SUDOKU_ID") var currentSudokuId: String = "no"
+    @Environment(\.modelContext) private var modelContext
+    
     static var difficulty: Difficulty = .hard
     static var maxOfMistakes: Int = 3
     static var maxOfHints: Int = 1
     
-    @State public var sudoku = SudokuGenerator(difficulty: difficulty, maxOfMistakes: maxOfMistakes, maxOfHints: maxOfHints)
+    @State private var sudoku = SudokuGenerator(difficulty: difficulty, maxOfMistakes: maxOfMistakes, maxOfHints: maxOfHints)
     let tileWidth: CGFloat = 40
     let tileHeight: CGFloat = 49
     let dividerWidth: CGFloat = 3
+    var isGameBlocked: Bool {
+        sudoku.isPaused || sudoku.isLost || sudoku.isSolved
+    }
     
     @ViewBuilder var body: some View {
         
@@ -38,7 +44,14 @@ struct SudokuView: View {
                     Spacer()
                     VStack {
                         Text("Time")
-                        Text("\(Sudoku.elapsedTime)")
+                        Text(sudoku.timer.formattedTime())
+                    }
+                    Spacer()
+                    Button {
+                        sudoku.togglePauseResume()
+                    } label: {
+                        Image(systemName: sudoku.isPaused ? "play.fill" : "pause.fill")
+                            .font(.system(size: 20))
                     }
                 }
                 .padding(.horizontal)
@@ -66,7 +79,7 @@ struct SudokuView: View {
                     .onAppear {
                         sudoku.startGame()
                     }
-                    .blur(radius: sudoku.isLost || sudoku.isSolved ? 5 : 0)
+                    .blur(radius: isGameBlocked ? 5 : 0)
                     if (sudoku.isLost || sudoku.isSolved) {
                         VStack {
                             Text(sudoku.isLost ? "You lost!" : "You won!")
@@ -81,19 +94,33 @@ struct SudokuView: View {
                             .buttonStyle(.borderedProminent)
                         }
                     }
+                    if (sudoku.isPaused) {
+                        VStack {
+                            Text("Game paused")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                            Button {
+                                sudoku.togglePauseResume()
+                            } label: {
+                                Text("Resume game")
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
+                    }
                 }
                 .border(.primary, width: dividerWidth)
                 
                 HStack {
                     VStack {
                         Button {
-                            
+                            sudoku.undo()
                         } label: {
                             Image(systemName: "arrow.uturn.backward")
                                 .font(.system(size: 30))
                         }
+                        .disabled(isGameBlocked)
                         Text("Undo")
-                            .foregroundColor(.accentColor)
+                            .foregroundColor(isGameBlocked ? .gray : .accentColor)
                     }
                     Spacer()
                     VStack {
@@ -103,8 +130,30 @@ struct SudokuView: View {
                             Image(systemName: "eraser")
                                 .font(.system(size: 30))
                         }
+                        .disabled(isGameBlocked)
                         Text("Erase")
-                            .foregroundColor(.accentColor)
+                            .foregroundColor(isGameBlocked ? .gray : .accentColor)
+                    }
+                    Spacer()
+                    VStack {
+                        ZStack {
+                            Button {
+                                sudoku.toggleNotesMode()
+                            } label: {
+                                Image(systemName: "pencil.line")
+                                    .font(.system(size: 30))
+                            }
+                            .disabled(isGameBlocked)
+                            Text(sudoku.isNotesMode ? "ON": "OFF")
+                                .font(.caption)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: 34, maxHeight: 20)
+                                .background(sudoku.isNotesMode && !isGameBlocked ? Color.primary : Color.gray)
+                                .clipShape(.capsule)
+                                .offset(x: 20, y: -14)
+                        }
+                        Text("Notes")
+                            .foregroundColor(isGameBlocked ? .gray : .accentColor)
                     }
                     Spacer()
                     VStack {
@@ -115,21 +164,21 @@ struct SudokuView: View {
                                 Image(systemName: "lightbulb")
                                     .font(.system(size: 30))
                             }
-                            .disabled(sudoku.avaliableHints == 0)
+                            .disabled(sudoku.avaliableHints == 0 || isGameBlocked)
                             
                             if (sudoku.avaliableHints > 0) {
                                 Text("\(sudoku.avaliableHints)")
                                     .font(.caption)
                                     .foregroundColor(.white)
                                     .frame(maxWidth: 20, maxHeight: 20)
-                                    .background(.red)
+                                    .background(isGameBlocked ? Color.gray : Color.red)
                                     .clipShape(.circle)
                                     .offset(x: 10, y: -14)
                                     
                             }
                         }
                         Text("Hint")
-                            .foregroundColor(sudoku.avaliableHints == 0 ? .gray : .accentColor)
+                            .foregroundColor(sudoku.avaliableHints == 0 || isGameBlocked ? .gray : .accentColor)
                     }
                 }
                 .padding(.horizontal)
@@ -138,12 +187,27 @@ struct SudokuView: View {
                     ForEach(0..<9) { num in
                         Button(String(num + 1)) {
                             sudoku.guess(num + 1)
+                            if !currentSudokuId.isEmpty { return }
+                            else {
+                                let newHistoricSudoku = HistoricSudoku(
+                                    currentState: sudoku.currentState,
+                                    difficulty: Self.difficulty,
+                                    errorsCount: sudoku.errorsCount,
+                                    initialState: sudoku.initialState,
+                                    maxOfMistakes: Self.maxOfMistakes,
+                                    maxOfHints: Self.maxOfHints,
+                                    score: sudoku.score,
+                                    solution: sudoku.solution,
+                                    time: sudoku.timer.timeElapsed
+                                )
+                                modelContext.insert(newHistoricSudoku)
+                            }
                         }
                         .foregroundColor(.accentColor)
                         .font(.largeTitle)
                         .fontWeight(.semibold)
                         .frame(width: 33, height: 50)
-                        .disabled(sudoku.isLost || sudoku.isSolved)
+                        .disabled(isGameBlocked)
                     }
                 }
                 .padding(.horizontal)
@@ -158,4 +222,5 @@ struct SudokuView: View {
 
 #Preview {
     SudokuView()
+        .modelContainer(for: HistoricSudoku.self, inMemory: true)
 }

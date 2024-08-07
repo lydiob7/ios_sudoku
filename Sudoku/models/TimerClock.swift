@@ -6,38 +6,30 @@
 //
 
 import Foundation
-import Combine
 
+@Observable
 class TimerClock {
-  // the interval at which the timer ticks
-  let interval: TimeInterval
-  // the action to take when the timer ticks
-  let onTick: () -> Void
-
-  private var timer: Publishers.Autoconnect<Timer.TimerPublisher>? = nil
-  private var subscription: AnyCancellable? = nil
-
-  init(interval: TimeInterval, onTick: @escaping () -> Void) {
-    self.interval = interval
-    self.onTick = onTick
-  }
-
-  var isRunning: Bool {
-    timer != nil
-  }
-
-  // start the timer and begin ticking
-  func start() {
-    timer = Timer.publish(every: interval, on: .main, in: .common).autoconnect()
-    subscription = timer?.sink(receiveValue: { _ in
-       self.onTick()
-    })
-  }
-
-  // cancel the timer and clean up its resources
-  func cancel() {
-    timer?.upstream.connect().cancel()
-    timer = nil
-    subscription = nil
-  }
+    var timeElapsed: TimeInterval = 0
+    var timer: Timer?
+    var isRunning: Bool = false
+    
+    func formattedTime() -> String {
+        let minutes = Int(timeElapsed) / 60
+        let seconds = Int(timeElapsed) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    func start() {
+        isRunning = true
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(addTime), userInfo: nil, repeats: true)
+    }
+    
+    @objc func addTime() {
+        timeElapsed += 1
+    }
+    
+    func stop() {
+        isRunning = false
+    }
 }
+

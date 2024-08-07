@@ -16,6 +16,7 @@
 		79595EF82C482AD6000B572E /* TileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79595EF72C482AD6000B572E /* TileView.swift */; };
 		79595EFA2C482B12000B572E /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79595EF92C482B12000B572E /* GridView.swift */; };
 		79595EFC2C482B40000B572E /* SudokuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79595EFB2C482B40000B572E /* SudokuView.swift */; };
+		798B094F2C614BAC00B79F00 /* HistoricSudoku.swift in Sources */ = {isa = PBXBuildFile; fileRef = 798B094E2C614BAC00B79F00 /* HistoricSudoku.swift */; };
 		79EF73962C495CFF00086551 /* TimerClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79EF73952C495CFF00086551 /* TimerClock.swift */; };
 		79EF739B2C49779B00086551 /* SudokuGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79EF739A2C49779B00086551 /* SudokuGenerator.swift */; };
 /* End PBXBuildFile section */
@@ -31,6 +32,7 @@
 		79595EF72C482AD6000B572E /* TileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileView.swift; sourceTree = "<group>"; };
 		79595EF92C482B12000B572E /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		79595EFB2C482B40000B572E /* SudokuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuView.swift; sourceTree = "<group>"; };
+		798B094E2C614BAC00B79F00 /* HistoricSudoku.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricSudoku.swift; sourceTree = "<group>"; };
 		79EF73952C495CFF00086551 /* TimerClock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerClock.swift; sourceTree = "<group>"; };
 		79EF739A2C49779B00086551 /* SudokuGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +102,7 @@
 				79EF73952C495CFF00086551 /* TimerClock.swift */,
 				79595EF52C482A9C000B572E /* Sudoku.swift */,
 				79EF739A2C49779B00086551 /* SudokuGenerator.swift */,
+				798B094E2C614BAC00B79F00 /* HistoricSudoku.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -183,6 +186,7 @@
 				79595EF82C482AD6000B572E /* TileView.swift in Sources */,
 				79595EFA2C482B12000B572E /* GridView.swift in Sources */,
 				7950E43E2C46937F00B8B69F /* SudokuApp.swift in Sources */,
+				798B094F2C614BAC00B79F00 /* HistoricSudoku.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

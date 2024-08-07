@@ -30,6 +30,7 @@ struct Tile {
     
     public let correctNumber: Int
     
+    public var notes: [Int] = []
     public var isStatic: Bool
     public var currentNumber: Int?
     public var isSameNumberAsSelected: Bool = false
@@ -53,43 +54,56 @@ struct Tile {
         }
     }
     
-    mutating func select() {
-        self.isSelected = true
-    }
-    
     mutating func deselect() {
         self.isSelected = false
-    }
-    
-    mutating func groupSelect() {
-        self.isTileInGroupSelected = true
     }
     
     mutating func groupDeselect() {
         self.isTileInGroupSelected = false
     }
     
+    mutating func groupSelect() {
+        self.isTileInGroupSelected = true
+    }
+    
     mutating func guess(number: Int?) {
         self.currentNumber = number
+    }
+    
+    mutating func resetNotes() {
+        self.notes = []
+    }
+    
+    mutating func select() {
+        self.isSelected = true
     }
     
     mutating func setIsSameNumberAsSelected() {
         self.isSameNumberAsSelected = true
     }
     
-    mutating func unsetIsSameNumberAsSelected() {
-        self.isSameNumberAsSelected = false
-    }
-    
     mutating func setNumberHasErrors() {
         self.numberHasErrors = true
     }
     
-    mutating func unsetNumberHasErrors() {
-        self.numberHasErrors = false
-    }
-    
     mutating func showCorrectNumber() {
         self.isStatic = true
+    }
+    
+    mutating func toggleNote(_ number: Int) {
+        if notes.contains(number) {
+            notes = notes.filter { $0 != number }
+        }
+        else {
+            notes.append(number)
+        }
+    }
+    
+    mutating func unsetIsSameNumberAsSelected() {
+        self.isSameNumberAsSelected = false
+    }
+    
+    mutating func unsetNumberHasErrors() {
+        self.numberHasErrors = false
     }
 }
