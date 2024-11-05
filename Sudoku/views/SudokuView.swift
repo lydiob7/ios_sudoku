@@ -113,6 +113,7 @@ struct SudokuView: View {
                     }
                 }
                 .border(.primary, width: dividerWidth)
+                .sensoryFeedback(.impact(weight: .medium, intensity: 1),trigger: sudoku.hasErrors)
                 
                 GameControlsView(sudoku: $sudoku, isGameBlocked: isGameBlocked)
             }

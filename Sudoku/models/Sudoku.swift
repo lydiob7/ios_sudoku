@@ -46,6 +46,17 @@ struct Sudoku {
             }
         }
     }
+    var hasErrors: Bool {
+        var hasError = false
+        for row in (0..<9) {
+            for col in (0..<9) {
+                if tiles[row][col].wrongGuess {
+                    hasError = true
+                }
+            }
+        }
+        return hasError
+    }
     
     init(solution: [[Int]], initialState: [[Int]], maxOfMistakes: Int = 3, maxOfHints: Int = 1) {
         self.initialState = initialState
