@@ -29,6 +29,13 @@ struct Sudoku {
         errorsCount >= maxOfMistakes
     }
     var score: Int = 0
+    var filledTileCount: Int {
+        initialState.flatMap { $0 }.filter { $0 != 0 }.count
+    }
+    var scorePerGuess: Int {
+        guard filledTileCount < 81 else { return 0 }
+        return ALL_GUESSES_SCORE / (81 - filledTileCount)
+    }
     let timer = TimerClock()
     var finishedTime: String {
         return isLost || isSolved ? timer.formattedTime() : "00:00"
@@ -152,6 +159,9 @@ struct Sudoku {
                 toggleAllTilesWithSameNumberError(guessNumber, true)
             }
             else if let previousGuess { toggleAllTilesWithSameNumberError(previousGuess, false) }
+            else {
+                score += scorePerGuess
+            }
             if isLost || isSolved {
                 timer.stop()
             }

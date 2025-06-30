@@ -14,16 +14,18 @@ struct TileView: View {
     var body: some View {
         Button(action: {pressTile()}) {
             ZStack {
-                if (tile.isSelected) {
-                    Color(red: 178 / 255, green: 223 / 255, blue: 254 / 255)
+                if (tile.wrongGuess && tile.isSelected) {
+                    Color.red
+                } else if (tile.isSelected) {
+                    Color("AccentColorLight")
                 } else if tile.numberHasErrors {
                     Color(red: 255 / 255, green: 203 / 255, blue: 213 / 255)
                 } else if tile.isSameNumberAsSelected {
-                    Color(red: 196 / 255, green: 215 / 255, blue: 234 / 255)
+                    Color("AccentColorLight")
                 } else if tile.isTileInGroupSelected {
-                    Color(red: 227 / 255, green: 235 / 255, blue: 243 / 255)
+                    Color("GroupedTileBackground")
                 } else {
-                    Color.clear
+                    Color("TileBackground")
                 }
                 if tile.isStatic {
                     Text(String(tile.correctNumber))
@@ -33,7 +35,7 @@ struct TileView: View {
                 else if let currentNumber = tile.currentNumber {
                     Text(String(currentNumber))
                         .font(.title)
-                        .foregroundColor(tile.wrongGuess ? .red : .accentColor)
+                        .foregroundColor(tile.wrongGuess ? tile.isSelected || tile.isSameNumberAsSelected ? .white : .red : Color("TextColor"))
                 }
                 else if tile.notes.count > 0 {
                     GridStack(rows: 3, columns: 3, content: { (row, col) in
@@ -41,7 +43,7 @@ struct TileView: View {
                             if tile.notes.contains((row * 3) + col + 1) {
                                 Text("\((row * 3) + col + 1)")
                                     .font(.system(size: 12))
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(.black)
                                     .frame(maxWidth: 12)
                             }
                             else {

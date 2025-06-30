@@ -7,16 +7,15 @@
 
 import SwiftUI
 
-let SAVED_SUDOKU_KEY = "CurrentSudoku"
-
 struct SudokuView: View {
-    static var difficulty: Difficulty = .hard
-    static var maxOfMistakes: Int = 3
-    static var maxOfHints: Int = 1
+    let difficulty: Difficulty
+    let maxOfMistakes: Int
+    let maxOfHints: Int
+    let startNew: Bool
     
     @State var sudoku: Sudoku {
         didSet {
-            if let encoded = try? JSONEncoder().encode(toSavedSudoku(sudoku: sudoku, difficulty: Self.difficulty, maxOfMistakes: Self.maxOfMistakes, maxOfHints: Self.maxOfHints)) {
+            if let encoded = try? JSONEncoder().encode(toSavedSudoku(sudoku: sudoku, difficulty: difficulty, maxOfMistakes: maxOfMistakes, maxOfHints: maxOfHints)) {
                 UserDefaults.standard.set(encoded, forKey: SAVED_SUDOKU_KEY)
             }
         }
@@ -28,24 +27,28 @@ struct SudokuView: View {
         sudoku.isPaused || sudoku.isLost || sudoku.isSolved
     }
     
-    init() {
-        if let savedSudoku = UserDefaults.standard.data(forKey: SAVED_SUDOKU_KEY) {
-            if let decodedSudoku = try? JSONDecoder().decode(SavedSudoku.self, from: savedSudoku) {
-                self.sudoku = Sudoku(decodedSudoku)
-                if let difficulty = decodedSudoku.difficulty {
-                    Self.difficulty = difficulty
-                }
-                Self.maxOfHints = decodedSudoku.maxOfHints
-                Self.maxOfMistakes = decodedSudoku.maxOfMistakes
-                return
-            }
+    init(difficulty: Difficulty = .hard, maxOfMistakes: Int = 3, maxOfHints: Int = 1, startNew: Bool = false) {
+        self.difficulty = difficulty
+        self.maxOfMistakes = maxOfMistakes
+        self.maxOfHints = maxOfHints
+        self.startNew = startNew
+        
+        if !startNew,
+           let savedSudoku = UserDefaults.standard.data(forKey: SAVED_SUDOKU_KEY),
+           let decodedSudoku = try? JSONDecoder().decode(SavedSudoku.self, from: savedSudoku) {
+            _sudoku = State(initialValue: Sudoku(decodedSudoku))
+        } else {
+            _sudoku = State(initialValue: SudokuGenerator(
+                difficulty: difficulty,
+                maxOfMistakes: maxOfMistakes,
+                maxOfHints: maxOfHints
+            ))
         }
-        self.sudoku = SudokuGenerator(difficulty: Self.difficulty, maxOfMistakes: Self.maxOfMistakes, maxOfHints: Self.maxOfHints)
     }
     
     @ViewBuilder var body: some View {
             VStack(spacing: 30) {
-                GameToolbarView(sudoku: $sudoku, maxOfMistakes: Self.maxOfMistakes, difficulty: Self.difficulty)
+                GameToolbarView(sudoku: $sudoku, maxOfMistakes: maxOfMistakes, difficulty: difficulty)
                 ZStack {
                     GridStack(rows: 9, columns: 9, content: { (row, col) in
                         HStack(spacing: 0) {
@@ -58,14 +61,14 @@ struct SudokuView: View {
                                     }
                                 )
                                 .frame(width: tileWidth, height: tileHeight)
-                                .border(.placeholder, width: 0.8)
+                                .border(Color("TextColor"), width: 0.8)
                                 if (row == 2 || row == 5) {
-                                    Color.primary
+                                    Color("TextColor")
                                         .frame(width: tileWidth, height: dividerWidth)
                                 }
                             }
                             if (col == 2 || col == 5) {
-                                Color.primary
+                                Color("TextColor")
                                     .frame(width: dividerWidth, height: tileHeight)
                             }
                         }
@@ -80,36 +83,61 @@ struct SudokuView: View {
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
                                 .foregroundStyle(sudoku.isLost ? .red : .green)
-                            Button("Reset game") {
+                            
+                            if sudoku.isSolved {
+                                Text("Score: \(sudoku.score)")
+                            }
+                            
+                            Button {
                                 sudoku.reset()
+                            } label: {
+                                Text("Reset game")
+                                    .bold()
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 10)
+                                    .border(Color.black)
                             }
-                            .buttonStyle(.bordered)
-                            .border(Color.black)
-                            .cornerRadius(3.0)
-                            .foregroundColor(.black)
-                            Button("Start a new one") {
+                            Button {
                                 startNewGame()
+                            } label: {
+                                Text("Start a new one")
+                                    .bold()
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 10)
+                                    .background(Color("AccentColor"))
+                                    .border(Color.black)
                             }
-                            .buttonStyle(.borderedProminent)
                         }
+                        .frame(width: 300)
                     }
                     if (sudoku.isPaused) {
                         VStack(spacing: 20) {
                             Text("Game paused")
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
-                            Button("Start over") {
+                            Button {
                                 sudoku.reset()
+                            } label: {
+                                Text("Start over")
+                                    .bold()
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 10)
+                                    .border(Color.black)
                             }
-                            .buttonStyle(.bordered)
-                            .border(Color.black)
-                            .cornerRadius(3.0)
-                            .foregroundColor(.black)
-                            Button("Resume game") {
+                                
+                            Button {
                                 sudoku.togglePauseResume()
+                            } label: {
+                                Text("Resume game")
+                                    .bold()
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 10)
+                                    .background(Color("AccentColor"))
+                                    .border(Color.black)
                             }
-                            .buttonStyle(.borderedProminent)
+                              
                         }
+                        .frame(width: 300)
                     }
                 }
                 .border(.primary, width: dividerWidth)
@@ -117,11 +145,19 @@ struct SudokuView: View {
                 
                 GameControlsView(sudoku: $sudoku, isGameBlocked: isGameBlocked)
             }
+            .navigationTitle("Sudoku")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                NavigationLink(value: "settings", label: {
+                    Label("Settings", systemImage: "gearshape")
+                })
+            }
+            .foregroundStyle(Color("TextColor"))
            
     }
     
     func startNewGame() {
-        sudoku = SudokuGenerator(difficulty: Self.difficulty, maxOfMistakes: Self.maxOfMistakes, maxOfHints: Self.maxOfHints)
+        sudoku = SudokuGenerator(difficulty: difficulty, maxOfMistakes: maxOfMistakes, maxOfHints: maxOfHints)
         sudoku.startGame()
     }
 }
@@ -144,5 +180,11 @@ func toSavedSudoku(sudoku: Sudoku, difficulty: Difficulty, maxOfMistakes: Int, m
 }
 
 #Preview {
-    SudokuView()
+    ZStack {
+        Color("AppBackground")
+            .ignoresSafeArea()
+        
+        SudokuView(startNew: true)
+            .foregroundStyle(Color("TextColor"))
+    }
 }

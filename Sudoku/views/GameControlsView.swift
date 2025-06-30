@@ -19,10 +19,11 @@ struct GameControlsView: View {
                 } label: {
                     Image(systemName: "arrow.uturn.backward")
                         .font(.system(size: 30))
+                        .foregroundStyle(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
                 }
                 .disabled(isGameBlocked)
                 Text("Undo")
-                    .foregroundColor(isGameBlocked ? .gray : .accentColor)
+                    .foregroundColor(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
             }
             Spacer()
             VStack {
@@ -31,10 +32,11 @@ struct GameControlsView: View {
                 } label: {
                     Image(systemName: "eraser")
                         .font(.system(size: 30))
+                        .foregroundStyle(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
                 }
                 .disabled(isGameBlocked)
                 Text("Erase")
-                    .foregroundColor(isGameBlocked ? .gray : .accentColor)
+                    .foregroundColor(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
             }
             Spacer()
             VStack {
@@ -44,18 +46,19 @@ struct GameControlsView: View {
                     } label: {
                         Image(systemName: "pencil.line")
                             .font(.system(size: 30))
+                            .foregroundStyle(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
                     }
                     .disabled(isGameBlocked)
                     Text(sudoku.isNotesMode ? "ON": "OFF")
                         .font(.caption)
                         .foregroundColor(.white)
                         .frame(maxWidth: 34, maxHeight: 20)
-                        .background(sudoku.isNotesMode && !isGameBlocked ? Color.primary : Color.gray)
+                        .background(sudoku.isNotesMode && !isGameBlocked ? Color("AccentColor") : Color("DisabledText"))
                         .clipShape(.capsule)
                         .offset(x: 20, y: -14)
                 }
                 Text("Notes")
-                    .foregroundColor(isGameBlocked ? .gray : .accentColor)
+                    .foregroundColor(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
             }
             Spacer()
             VStack {
@@ -65,22 +68,23 @@ struct GameControlsView: View {
                     } label: {
                         Image(systemName: "lightbulb")
                             .font(.system(size: 30))
+                            .foregroundStyle(sudoku.availableHints == 0 || isGameBlocked ? Color("DisabledText") : Color("TextColor"))
                     }
                     .disabled(sudoku.availableHints == 0 || isGameBlocked)
                     
                     if (sudoku.availableHints > 0) {
                         Text("\(sudoku.availableHints)")
                             .font(.caption)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color("TextColor"))
                             .frame(maxWidth: 20, maxHeight: 20)
-                            .background(isGameBlocked ? Color.gray : Color.red)
+                            .background(isGameBlocked ? Color("DisabledText") : Color("AccentColor"))
                             .clipShape(.circle)
                             .offset(x: 10, y: -14)
                             
                     }
                 }
                 Text("Hint")
-                    .foregroundColor(sudoku.availableHints == 0 || isGameBlocked ? .gray : .accentColor)
+                    .foregroundColor(sudoku.availableHints == 0 || isGameBlocked ? Color("DisabledText") : Color("TextColor"))
             }
         }
         .padding(.horizontal)
@@ -90,7 +94,7 @@ struct GameControlsView: View {
                 Button(String(num + 1)) {
                     sudoku.guess(num + 1)
                 }
-                .foregroundColor(.accentColor)
+                .foregroundColor(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
                 .font(.largeTitle)
                 .fontWeight(.semibold)
                 .frame(width: 33, height: 50)
