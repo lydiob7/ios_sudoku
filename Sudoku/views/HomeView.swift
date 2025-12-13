@@ -21,17 +21,17 @@ struct HomeView: View {
                 .resizable()
                 .frame(width: 100, height: 100)
             
-            Text("Sudoku App")
+            Text("app_title")
                 .bold()
                 .font(.largeTitle)
             
-            Text("by Lydiob7")
+            Text("by_lydiob7")
                 .padding(.bottom)
             
             VStack {
-                Text("Sudoku Level")
+                Text("sudoku_level")
                 
-                Picker("Difficulty", selection: $difficulty) {
+                Picker("difficulty", selection: $difficulty) {
                     ForEach(Difficulty.allCases) { level in
                         Text(level.description).tag(level)
                     }
@@ -43,7 +43,7 @@ struct HomeView: View {
             
             VStack(spacing: 16) {
                 NavigationLink(value: "newSudoku", label: {
-                    Text("Start a new Sudoku")
+                    Text("start_new")
                         .bold()
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
@@ -53,7 +53,7 @@ struct HomeView: View {
 
                 if hasSavedSudoku {
                     NavigationLink(value: "continueSudoku", label: {
-                        Text("Resume Sudoku")
+                        Text("resume_game")
                             .bold()
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
@@ -68,7 +68,7 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 NavigationLink(value: "settings", label: {
-                    Label("Settings", systemImage: "gearshape")
+                    Label("settings", systemImage: "gearshape")
                 })
             }
             .foregroundStyle(Color("TextColor"))

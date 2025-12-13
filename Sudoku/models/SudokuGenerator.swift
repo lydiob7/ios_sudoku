@@ -5,6 +5,7 @@
 //  Created by Tomi Scattini on 18/07/2024.
 //
 import Foundation
+import SwiftUI
 
 enum Difficulty: Codable, Identifiable, CaseIterable {
     case evil, hard, medium, easy
@@ -12,16 +13,16 @@ enum Difficulty: Codable, Identifiable, CaseIterable {
     var id: Self {
         self
     }
-    var description: String {
+    var description: LocalizedStringKey {
         switch self {
         case .evil:
-            "Evil"
+            "difficulty.evil"
         case .hard:
-            "Hard"
+            "difficulty.hard"
         case .medium:
-            "Medium"
+            "difficulty.medium"
         case .easy:
-            "Easy"
+            "difficulty.easy"
         }
     }
 }

@@ -15,22 +15,22 @@ struct GameToolbarView: View {
     var body: some View {
         HStack {
             VStack {
-                Text("Mistakes")
+                Text("mistakes")
                 Text("\(sudoku.errorsCount) / \(maxOfMistakes)")
             }
             Spacer()
             VStack {
-                Text("Level")
-                Text("\(difficulty.description)")
+                Text("level")
+                Text(difficulty.description)
             }
             Spacer()
             VStack {
-                Text("Score")
+                Text("score")
                 Text("\(sudoku.score)")
             }
             Spacer()
             VStack {
-                Text("Time")
+                Text("time")
                 Text(sudoku.timer.formattedTime())
             }
             Spacer()

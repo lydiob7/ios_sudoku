@@ -8,14 +8,20 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @AppStorage(APP_LANGUAGE_KEY) private var appLanguage = DEFAULT_LANGUAGE_KEY
     
     var body: some View {
-        VStack {
-            Text("Settings screen")
+        Form {
+            Section {
+                Picker("settings.language", selection: $appLanguage) {
+                    ForEach(AppLanguage.allCases) { language in
+                        Text(language.title)
+                            .tag(language.rawValue)
+                    }
+                }
+            }
         }
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .foregroundStyle(Color("TextColor"))
+        .navigationTitle("settings_title")
     }
 }
 

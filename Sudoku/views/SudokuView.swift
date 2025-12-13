@@ -79,19 +79,19 @@ struct SudokuView: View {
                     .blur(radius: isGameBlocked ? 8 : 0)
                     if (sudoku.isLost || sudoku.isSolved) {
                         VStack(spacing: 20) {
-                            Text(sudoku.isLost ? "You lost!" : "You won!")
+                            Text(sudoku.isLost ? "you_lost" : "you_won")
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
                                 .foregroundStyle(sudoku.isLost ? .red : .green)
                             
                             if sudoku.isSolved {
-                                Text("Score: \(sudoku.score)")
+                                Text("score: \(sudoku.score)")
                             }
                             
                             Button {
                                 sudoku.reset()
                             } label: {
-                                Text("Reset game")
+                                Text("reset_game")
                                     .bold()
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 10)
@@ -100,7 +100,7 @@ struct SudokuView: View {
                             Button {
                                 startNewGame()
                             } label: {
-                                Text("Start a new one")
+                                Text("start_new")
                                     .bold()
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 10)
@@ -112,13 +112,13 @@ struct SudokuView: View {
                     }
                     if (sudoku.isPaused) {
                         VStack(spacing: 20) {
-                            Text("Game paused")
+                            Text("game_paused")
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
                             Button {
                                 sudoku.reset()
                             } label: {
-                                Text("Start over")
+                                Text("start_over")
                                     .bold()
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 10)
@@ -128,7 +128,7 @@ struct SudokuView: View {
                             Button {
                                 sudoku.togglePauseResume()
                             } label: {
-                                Text("Resume game")
+                                Text("resume_game")
                                     .bold()
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 10)
@@ -145,11 +145,11 @@ struct SudokuView: View {
                 
                 GameControlsView(sudoku: $sudoku, isGameBlocked: isGameBlocked)
             }
-            .navigationTitle("Sudoku")
+            .navigationTitle("app_title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 NavigationLink(value: "settings", label: {
-                    Label("Settings", systemImage: "gearshape")
+                    Label("settings_title", systemImage: "gearshape")
                 })
             }
             .foregroundStyle(Color("TextColor"))

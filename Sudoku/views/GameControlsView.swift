@@ -22,7 +22,7 @@ struct GameControlsView: View {
                         .foregroundStyle(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
                 }
                 .disabled(isGameBlocked)
-                Text("Undo")
+                Text("undo")
                     .foregroundColor(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
             }
             Spacer()
@@ -35,7 +35,7 @@ struct GameControlsView: View {
                         .foregroundStyle(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
                 }
                 .disabled(isGameBlocked)
-                Text("Erase")
+                Text("erase")
                     .foregroundColor(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
             }
             Spacer()
@@ -49,7 +49,7 @@ struct GameControlsView: View {
                             .foregroundStyle(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
                     }
                     .disabled(isGameBlocked)
-                    Text(sudoku.isNotesMode ? "ON": "OFF")
+                    Text(sudoku.isNotesMode ? "on": "off")
                         .font(.caption)
                         .foregroundColor(.white)
                         .frame(maxWidth: 34, maxHeight: 20)
@@ -57,7 +57,7 @@ struct GameControlsView: View {
                         .clipShape(.capsule)
                         .offset(x: 20, y: -14)
                 }
-                Text("Notes")
+                Text("notes")
                     .foregroundColor(isGameBlocked ? Color("DisabledText") : Color("TextColor"))
             }
             Spacer()
@@ -83,7 +83,7 @@ struct GameControlsView: View {
                             
                     }
                 }
-                Text("Hint")
+                Text("hint")
                     .foregroundColor(sudoku.availableHints == 0 || isGameBlocked ? Color("DisabledText") : Color("TextColor"))
             }
         }
