@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SudokuView: View {
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var isVisible = false
+    
     let difficulty: Difficulty
     let maxOfMistakes: Int
     let maxOfHints: Int
@@ -73,10 +76,8 @@ struct SudokuView: View {
                             }
                         }
                     })
-                    .onAppear {
-                        sudoku.startGame()
-                    }
                     .blur(radius: isGameBlocked ? 8 : 0)
+                    
                     if (sudoku.isLost || sudoku.isSolved) {
                         VStack(spacing: 20) {
                             Text(sudoku.isLost ? "you_lost" : "you_won")
@@ -148,12 +149,40 @@ struct SudokuView: View {
             .navigationTitle("app_title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                NavigationLink(value: "settings", label: {
-                    Label("settings_title", systemImage: "gearshape")
-                })
+                // Center title (controls color explicitly)
+                ToolbarItem(placement: .principal) {
+                    Text("app_title")
+                        .foregroundStyle(Color("TextColor"))
+                        .font(.headline)
+                }
+
+                // Settings button (right side)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(value: "settings") {
+                        Label("settings_title", systemImage: "gearshape")
+                    }
+                }
             }
-            .foregroundStyle(Color("TextColor"))
-           
+        
+            .onAppear {
+                isVisible = true
+                sudoku.startGameIfNeeded()
+            }
+            .onDisappear {
+                isVisible = false
+                sudoku.pauseIfNeeded()
+            }
+            .onChange(of: scenePhase) {
+                switch scenePhase {
+                case .active:
+                    if isVisible { sudoku.startGameIfNeeded() }
+                case .inactive, .background:
+                    sudoku.pauseIfNeeded()
+                default:
+                    break
+                }
+            }
+
     }
     
     func startNewGame() {

@@ -26,6 +26,8 @@
 		798B094F2C614BAC00B79F00 /* HistoricSudoku.swift in Sources */ = {isa = PBXBuildFile; fileRef = 798B094E2C614BAC00B79F00 /* HistoricSudoku.swift */; };
 		79EF73962C495CFF00086551 /* TimerClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79EF73952C495CFF00086551 /* TimerClock.swift */; };
 		79EF739B2C49779B00086551 /* SudokuGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79EF739A2C49779B00086551 /* SudokuGenerator.swift */; };
+		79F020572EEDE5A6004A4402 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79F020562EEDE5A6004A4402 /* LaunchScreen.storyboard */; };
+		79F122B62EF1C3AE003920B2 /* LanguageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F122B52EF1C3A3003920B2 /* LanguageSelectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +52,8 @@
 		79C79DC52EED68500033D514 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		79EF73952C495CFF00086551 /* TimerClock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerClock.swift; sourceTree = "<group>"; };
 		79EF739A2C49779B00086551 /* SudokuGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuGenerator.swift; sourceTree = "<group>"; };
+		79F020562EEDE5A6004A4402 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		79F122B52EF1C3A3003920B2 /* LanguageSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -70,6 +74,7 @@
 		7950E4312C46937F00B8B69F = {
 			isa = PBXGroup;
 			children = (
+				79F020562EEDE5A6004A4402 /* LaunchScreen.storyboard */,
 				79C79DC52EED68500033D514 /* Localizable.xcstrings */,
 				79253F812C63E61400203916 /* README.md */,
 				7950E43C2C46937F00B8B69F /* Sudoku */,
@@ -110,6 +115,7 @@
 		79595EFD2C482B8E000B572E /* views */ = {
 			isa = PBXGroup;
 			children = (
+				79F122B52EF1C3A3003920B2 /* LanguageSelectionView.swift */,
 				7954A7B62E118BFF0018B3FC /* HomeView.swift */,
 				79547A5E2E1170EC0000555F /* Settings.swift */,
 				79595EFB2C482B40000B572E /* SudokuView.swift */,
@@ -198,6 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7950E4452C46938000B8B69F /* Preview Assets.xcassets in Resources */,
+				79F020572EEDE5A6004A4402 /* LaunchScreen.storyboard in Resources */,
 				7950E4422C46938000B8B69F /* Assets.xcassets in Resources */,
 				794BD5C72EED721900755B76 /* Localizable.xcstrings in Resources */,
 			);
@@ -216,6 +223,7 @@
 				79595EFC2C482B40000B572E /* SudokuView.swift in Sources */,
 				7950E4402C46937F00B8B69F /* ContentView.swift in Sources */,
 				79547A5F2E1170F30000555F /* Settings.swift in Sources */,
+				79F122B62EF1C3AE003920B2 /* LanguageSelectionView.swift in Sources */,
 				79595EF62C482A9C000B572E /* Sudoku.swift in Sources */,
 				79EF739B2C49779B00086551 /* SudokuGenerator.swift in Sources */,
 				790E4E0F2C63B3C50043082A /* GameToolbarView.swift in Sources */,
@@ -365,6 +373,8 @@
 				DEVELOPMENT_TEAM = N4L959PVFY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Sudoku b7";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.puzzle-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -374,10 +384,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lydiob7.sudoku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -396,6 +410,8 @@
 				DEVELOPMENT_TEAM = N4L959PVFY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Sudoku b7";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.puzzle-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -405,10 +421,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lydiob7.sudoku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

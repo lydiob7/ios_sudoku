@@ -65,13 +65,23 @@ struct HomeView: View {
             .frame(width: 300)
             .background(Color("AppBackground"))
         }
+            .navigationTitle("home_title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                NavigationLink(value: "settings", label: {
-                    Label("settings", systemImage: "gearshape")
-                })
+                // Center title (controls color explicitly)
+                ToolbarItem(placement: .principal) {
+                    Text("home_title")
+                        .foregroundStyle(Color("TextColor"))
+                        .font(.headline)
+                }
+
+                // Settings button (right side)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(value: "settings") {
+                        Label("settings_title", systemImage: "gearshape")
+                    }
+                }
             }
-            .foregroundStyle(Color("TextColor"))
     }
 }
 

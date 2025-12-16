@@ -30,7 +30,7 @@ struct TileView: View {
                 if tile.isStatic {
                     Text(String(tile.correctNumber))
                         .font(.title)
-                        .foregroundColor(.primary)
+                        .foregroundColor(Color("TextColor"))
                 }
                 else if let currentNumber = tile.currentNumber {
                     Text(String(currentNumber))

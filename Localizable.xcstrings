@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "es",
   "strings" : {
+    "" : {
+
+    },
     "%lld" : {
       "localizations" : {
         "en" : {
@@ -32,7 +35,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Sudoku b7"
           }
         },
@@ -223,6 +226,23 @@
         }
       }
     },
+    "home_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio"
+          }
+        }
+      }
+    },
     "language.english" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -403,6 +423,7 @@
       }
     },
     "settings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -448,6 +469,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Idioma"
+          }
+        }
+      }
+    },
+    "settings.rate_app" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate App"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valorar la app"
           }
         }
       }
@@ -545,6 +583,9 @@
           }
         }
       }
+    },
+    "v1.0.0" : {
+
     },
     "you_lost" : {
       "localizations" : {

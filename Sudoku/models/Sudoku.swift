@@ -244,6 +244,7 @@ struct Sudoku {
         isNotesMode = !isNotesMode
     }
     
+    // ============== timer functions ====================
     mutating func togglePauseResume() {
         isPaused = !isPaused
         if isPaused {
@@ -252,6 +253,23 @@ struct Sudoku {
         else {
             timer.resume()
         }
+    }
+    
+    mutating func pauseIfNeeded() {
+        guard !isPaused else { return }
+        isPaused = true
+        timer.stop()
+    }
+
+    mutating func resumeIfNeeded() {
+        guard isPaused else { return }
+        isPaused = false
+        timer.resume()
+    }
+
+    mutating func startGameIfNeeded() {
+        guard !isPaused, !isLost, !isSolved else { return }
+        timer.start()
     }
     
     mutating func toggleTileNote(_ number: Int) {
