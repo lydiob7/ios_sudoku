@@ -74,7 +74,7 @@ struct SettingsView: View {
             }
 
             
-            Text("v1.0.0")
+            Text("v1.0.1")
         }
     }
     
